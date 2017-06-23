@@ -14,6 +14,15 @@
     return '_' + id + '_$1';
   }
 
+  var getInsertionMethodName = function(insertionMethod, $this){
+
+    if (typeof insertionNode == 'function'){
+      return insertionMethod($this);
+    }
+
+    return insertionMethod;
+  }
+
   var getInsertionNodeElem = function(insertionNode, insertionTraversal, $this){
 
     if (!insertionNode){
@@ -78,6 +87,12 @@
     var insertionNodeElem = getInsertionNodeElem(insertionNode, insertionTraversal, $this)
 
     if( !insertionNodeElem || (insertionNodeElem.length == 0) ){
+      console.warn("Couldn't define the insertion method. Make sure your `data-association-method` on `link_to_add_association` is correct.")
+    }
+
+    var insertionMethodName = getInsertionMethodName(insertionMethod, $(this))
+
+    if( !insertionMethodName) ){
       console.warn("Couldn't find the element to insert the template. Make sure your `data-association-insertion-*` on `link_to_add_association` is correct.")
     }
 
@@ -89,7 +104,7 @@
       // allow any of the jquery dom manipulation methods (after, before, append, prepend, etc)
       // to be called on the node.  allows the insertion node to be the parent of the inserted
       // code and doesn't force it to be a sibling like after/before does. default: 'before'
-      var addedContent = insertionNodeElem[insertionMethod](contentNode);
+      var addedContent = insertionNodeElem[insertionMethodName](contentNode);
 
       insertionNodeElem.trigger('cocoon:after-insert', [contentNode]);
     });
