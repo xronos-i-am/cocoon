@@ -16,7 +16,7 @@
 
   var getInsertionMethodName = function(insertionMethod, $this){
 
-    if (typeof insertionNode == 'function'){
+    if (typeof insertionMethod == 'function'){
       return insertionMethod($this);
     }
 
